@@ -10,7 +10,7 @@ const hostname = process.env.HOST_NAME;
 const cors = require('cors');
 app.use("/public", express.static(path.join(__dirname, "public")));
 const bodyParser = require('body-parser');
-// const connection = require('./config/dataBase.js');
+const connection = require('./config/dataBase.js');
 const moment = require('moment');
 app.use(cors());
 
