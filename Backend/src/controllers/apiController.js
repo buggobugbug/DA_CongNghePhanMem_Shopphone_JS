@@ -110,11 +110,39 @@ const getAllUser = async (req, res) => {
     });
 };
 
+const getIdProduct = async (req, res) => {
+    let id = req.params.id;
+    try {
+        const [results, fields] = await connection.execute(
+            "SELECT * FROM SANPHAM WHERE id = ?", [id]
+        );
+
+        //Thêm đường dẫn đầy đủ cho mỗi sản phẩm
+        const productsWithImageUrls = results.map((product) => {
+            return {
+                ...product,
+                imageUrl: `http://localhost:8080/api/v1/img/${product.mota}`,
+            };
+        });
+
+        return res.status(200).json({
+            //message: "ok",
+            data: productsWithImageUrls,
+        });
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).json({
+            message: "Internal server error!!!",
+            error: error.message,
+        });
+    }
+}
+
 module.exports = {
     getAllUser,
     getAllProduct,
     updateProduct,
     createProduct,
     deleteProduct,
-
+    getIdProduct,
 };

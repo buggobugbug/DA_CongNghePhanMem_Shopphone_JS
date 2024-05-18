@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="../public/style.css">
+    <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
 
 </head>
@@ -15,6 +15,217 @@
         <a href="/user-order">User</a>
         <a href="/bill-order">Bill</a>
     </div>
+
+    <div class="create-user-container">
+        <form action="/create-new-product" method="post" enctype="multipart/form-data">
+            <fieldset>
+                <legend>
+                    <h2><b>Thêm sản phẩm</b></h2>
+                </legend>
+                <!-- <div>
+                    <label for="">Mã sản phẩm : </label>
+                    <input type="text" name="id" />
+                </div> -->
+                <div>
+                    <label for="">Tên sản phẩm: </label>
+                    <input type="text" name="tenSP" />
+                </div>
+                <div>
+                    <label for="">Hệ điều hành: </label>
+                    <select name="tenloaiSP" id="hall" value="3">
+                        <option>Android</option>
+                        <option>iOS</option>
+                    </select>
+                </div>
+                <div>
+                    <div class="input-group">
+                        <label for="size">Hãng:</label>
+                        <select name="tenNSX">
+                            <% AllNSX.forEach(function(AllNSX) { %>
+                                <option value="<%= AllNSX.tenNSX %>">
+                                    <%= AllNSX.tenNSX %>
+                                </option>
+                                <% }); %>
+                        </select>
+
+                        <span class="button-them">
+                            <a href="/tao-moi-NSX" method="get">Thêm</a>
+                        </span>
+
+                    </div>
+
+                </div>
+                <div>
+                    <label for="">Số lượng thêm: </label>
+                    <input type="text" name="soluong" />
+                </div>
+                <div>
+                    <label for="">Giá tiền: </label>
+                    <input type="text" name="giatien" />
+                </div>
+                <div>
+                    <label for="">Màn hình: </label>
+                    <input type="text" name="manhinh" />
+                </div>
+                <div>
+                    <label for="">Dung lượng: </label>
+                    <select name="dungluong" id="hall" value="3">
+                        <option>32 GB</option>
+                        <option>64 GB</option>
+                        <option>128 GB</option>
+                        <option>256 GB</option>
+                        <option>512 GB</option>
+                        <option>1 TB</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="">RAM: </label>
+                    <select name="ram" id="hall" value="3">
+                        <option>1 GB</option>
+                        <option>2 GB</option>
+                        <option>4 GB</option>
+                        <option>6 GB</option>
+                        <option>8 GB</option>
+                        <option>12 GB</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="">Pin, sạc: </label>
+                    <input type="text" name="pin" />
+                </div>
+                <div>
+                    <label for="">Ghi chú: </label>
+                    <input type="text" name="ghichu" />
+                </div>
+
+                <div>
+                    <label for="">Ảnh: </label>
+                    <input type="file" name="profile_pic" />
+                </div>
+
+                <div>
+                    <button type="submit">Xác nhận</button>
+                </div>
+            </fieldset>
+        </form>
+        <form method="POST" action="/upload-profile-pic" enctype="multipart/form-data"></form>
+    </div>
+
+    <div class="w3-container">
+        <h2>Danh Sách Sản Phẩm</h2>
+        <!-- Trong phần HTML -->
+        <form action="/Tim" method="post">
+            <label class="search-container">
+                <input class="search" type="text" id="tenSP" name="tenSP" placeholder="Nhập tên sản phẩm...">
+                <button type="submit" class="button">Tìm kiếm</button>
+            </label>
+
+            <label class="search-container">
+                <input class="search" type="text" id="tenloaiSP" name="tenloaiSP" placeholder="Nhập tên loại...">
+                <button class="button" type="submit">Tìm kiếm</button>
+            </label>
+
+            <label class="search-container">
+                <input class="search" type="text" id="tenNSX" name="tenNSX" placeholder="Nhập tên hãng...">
+                <button class="button" type="submit">Tìm kiếm</button>
+            </label>
+            <label class="search-container">
+                <select id="giatien" name="giatien">
+                    <option value="">Chọn giá</option>
+                    <option value="5000000">Dưới 5,000,000 VND</option>
+                    <option value="10000000">5,000,000 - 10,000,000 VND</option>
+                    <option value="15000000">10,000,000 - 12,000,000 VND</option>
+                    <option value="20000000">Trên 20,000,000 VND</option>
+                    <!-- Thêm các option khác tùy theo nhu cầu -->
+                </select>
+                <button class="button" type="submit">Tìm kiếm</button>
+            </label>
+
+        </form>
+
+        <table class="w3-table-all w3-hoverable">
+            <thead>
+                <tr class="w3-light-grey">
+                    <th>Mã sản phẩm</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Hệ điều hành</th>
+                    <th>Tên hãng</th>
+                    <th>Số lượng</th>
+                    <th>Giá tiền</th>
+                    <th>Màn hình</th>
+                    <th>Dung lượng</th>
+                    <th>RAM</th>
+                    <th>Pin, sạc</th>
+                    <th>Ghi chú</th>
+                    <th>Minh họa</th>
+                    <th>Chức năng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(let i=0; i < dataProduct.length; i++) { %>
+                    <tr>
+                        <td>
+                            <%= dataProduct[i].id %>
+                        </td>
+                        <td>
+                            <%= dataProduct[i].tenSP %>
+                        </td>
+                        <td>
+                            <%= dataProduct[i].tenloaiSP %>
+                        </td>
+                        <td>
+                            <%= dataProduct[i].tenNSX %>
+                        </td>
+                        <td>
+                            <%= dataProduct[i].soluong %>
+                        </td>
+
+                        <td>
+                            <%= dataProduct[i].giatien %>
+                        </td>
+
+                        <td>
+                            <%= dataProduct[i].manhinh %>
+                        </td>
+
+                        <td>
+                            <%= dataProduct[i].dungluong %>
+                        </td>
+
+                        <td>
+                            <%= dataProduct[i].ram %>
+                        </td>
+
+                        <td>
+                            <%= dataProduct[i].pin %>
+                        </td>
+
+                        <td>
+                            <%= dataProduct[i].ghichu %>
+                        </td>
+
+                        <td>
+                            <img src="/img/<%= dataProduct[i].mota %>" alt="" width="100px" height="100px" />
+                        </td>
+
+                        <td style="display: flex">
+                            <form action="/editproduct/<%=dataProduct[i].id%>" method="get">
+                                <button type="submit">Edit</button>
+                            </form>
+
+                            <form action="/delete-product" method="post">
+                                <input type="text" hidden value="<%=dataProduct[i].id%>" name="productId" /><button
+                                    type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% } %>
+            </tbody>
+        </table>
+    </div>
+
+
 </body>
 
 </html>
