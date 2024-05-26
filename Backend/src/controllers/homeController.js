@@ -22,8 +22,40 @@ const getUser = async (req, res) => {
     };
 };
 
+const getDetailBill = async (req, res) => {
+    try {
+        const [results, fields] = await connection.execute(`
+            SELECT
+                HOADON.maHD,
+                KHACHHANG.maKH,
+                SANPHAM.tenSP,
+                KHACHHANG.hotenKH,
+                KHACHHANG.sdt,
+                KHACHHANG.diachi,
+                CHITIETHOADON.soluongdat,
+                CHITIETHOADON.tongtien,
+                HOADON.thoigiandat
+            FROM
+                HOADON
+            JOIN
+                KHACHHANG ON HOADON.maKH = KHACHHANG.maKH
+            JOIN
+                CHITIETHOADON ON HOADON.maHD = CHITIETHOADON.maHD
+            JOIN
+                SANPHAM ON CHITIETHOADON.id = SANPHAM.id
+        `);
+
+        return res.render("detailbill.ejs", { dataBills: results });
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return res.status(500).send("Internal Server Error");
+    }
+};
+
 module.exports = {
     getHomePage,
     getUserPage,
-    getUser
+    getUser,
+    getDetailBill,
+
 };

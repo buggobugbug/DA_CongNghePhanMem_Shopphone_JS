@@ -7,10 +7,14 @@ var appRoot = require('app-root-path');
 const {
     getHomePage,
     getUserPage,
+    getDetailBill,
 } = require('../controllers/homeController');
 
 router.get("/", getHomePage);
 
 router.get("/user-order", getUserPage);
+
+
+router.get("/bill-order", getDetailBill);
 
 module.exports = router;
