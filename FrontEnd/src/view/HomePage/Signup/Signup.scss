@@ -39,13 +39,17 @@
 
 .form input {
     height: 60px;
-    width: 100%;
+    width: 80%;
     padding: 0 15px;
     font-size: 17px;
     margin-bottom: 1.3rem;
     border: 1px solid #ddd;
     border-radius: 6px;
     outline: none;
+}
+
+.button {
+    width: 100%;
 }
 
 .form input:focus {
@@ -59,10 +63,15 @@
 }
 
 .form a:hover {
+    cursor: pointer;
+}
+
+.form a:hover {
     text-decoration: underline;
 }
 
-.form input.button {
+.form button {
+    height: 3rem;
     color: #fff;
     background: #009579;
     font-size: 1.2rem;
@@ -71,6 +80,7 @@
     margin-top: 1.7rem;
     cursor: pointer;
     transition: 0.4s;
+    margin-bottom: 10px;
 }
 
 .form input.button:hover {
@@ -88,5 +98,5 @@
 }
 
 .signup label:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
