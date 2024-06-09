@@ -17,9 +17,9 @@ INSERT INTO TAIKHOAN(taikhoan, matkhau)
 values
 ('abc', '123');
 
-INSERT INTO KHACHHANG(maKH, hotenKH, sdt, diachi, taikhoan)
+INSERT INTO KHACHHANG(maKH, hotenKH, sdt, diachi, taikhoan, avatar)
 values
-('1', 'Nguyễn Hoàng Nhân', '0987863073', 'Trà Vinh', 'abc');
+('2', 'Nguyễn Thị A', '0987863073', 'Trà Vinh', 'nhan', 'avatar.png');
 
 CREATE TABLE NHASANXUAT(
 	tenNSX varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL PRIMARY KEY
@@ -65,7 +65,7 @@ CREATE TABLE SANPHAM(
 );
 
 INSERT INTO SANPHAM (id, tenSP, soluong, tenloaiSP, tenNSX, dungluong, ram, giatien, manhinh, pin, ghichu, mota) VALUES
-('1', 'iPhone 15 Pro Max', 20, 'iOS', 'Apple', '512 GB', '8 GB', '39690000', 'OLED6.7",Super Retina XDR', '4422 mAh, 20 W', 'Vào tháng 09/2023, cuối cùng Apple cũng đã chính thức giới thiệu iPhone 15 Pro Max 512 GB tại sự kiện ra mắt thường niên với nhiều điểm đáng chú ý, nổi bật trong số đó có thể kể đến như sự góp mặt của chipset Apple A17 Pro có trên máy, thiết kế khung titan hay cổng Type-C lần đầu có mặt trên điện thoại iPhone.', 'iphone-15-pro-max.jpg');
+('1', 'iPhone 15 Pro Max', 20, 'iOS', 'Apple', '512 GB', '8 GB', '39690000', 'OLED6.7",Super Retina XDR', '4422 mAh, 20 W', 'Vào tháng 09/2023, cuối cùng Apple cũng đã chính thức giới thiệu iPhone 15 Pro Max 512 GB tại sự kiện ra mắt thường niên với nhiều điểm đáng chú ý, nổi bật trong số đó có thể kể đến như sự góp mặt của chipset Apple A17 Pro có trên máy, thiết kế khung titan hay cổng Type-C lần đầu có mặt trên điện thoại iPhone.', 'phone.jpg');
 
 INSERT INTO SANPHAM (id, tenSP, soluong, tenloaiSP, tenNSX, dungluong, ram, giatien, manhinh, pin, ghichu, mota) VALUES
 ('2', 'OPPO Reno11 F 5G', 20, 'Android', 'Oppo', '256 GB', '8 GB', '8790000', 'AMOLED, 6.7", Full HD+', '5000 mAh, 67 W', 'OPPO Reno11 F 5G là một chiếc điện thoại tầm trung mới được OPPO ra mắt trong thời gian gần đây. Máy sở hữu nhiều ưu điểm nổi bật như thiết kế trẻ trung, màn hình đẹp, hiệu năng mạnh mẽ nhờ chip Dimensity 7050 5G, hứa hẹn mang đến trải nghiệm tốt khi sử dụng.', 'oppo-reno11-f-purple.webp');
