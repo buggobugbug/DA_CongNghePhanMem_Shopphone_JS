@@ -1,0 +1,125 @@
+.container-footer {
+    background-color: antiquewhite;
+    width: 100%;
+    height: 200px;
+    display: flex;
+}
+
+.foolter {
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    height: 200px;
+    color: black;
+}
+
+.thea {
+    text-decoration: none;
+}
+
+.footer-hr {
+    width: 1px;
+    border: 1px solid black;
+    opacity: 0.1;
+}
+
+
+.logo {
+    width: 50%;
+    border-radius: 50%;
+    height: 100%;
+
+    color: black;
+    font-size: 50px;
+    font-weight: bold;
+
+    font-family: 'Niconne', cursive;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+hr {
+    width: 100%;
+}
+
+.footer-logo {
+    border-top: 1px solid rgb(206, 206, 206);
+    width: 20%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+}
+
+.footer-thongtinlienhe {
+    border-top: 1px solid rgb(206, 206, 206);
+    width: 30%;
+
+    .thongtinlienhe1 {
+        font-size: 25px;
+    }
+
+    .thongtinlienhe2 {
+        font-size: 20px;
+    }
+}
+
+.footer-chinhsach {
+    border-top: 1px solid rgb(206, 206, 206);
+    width: 30%;
+
+    .footer-chinhsach1 {
+        font-size: 25px;
+    }
+
+    .footer-chinhsach2 {
+        font-size: 20px;
+    }
+}
+
+.footer-hotro {
+    border-top: 1px solid rgb(206, 206, 206);
+    width: 30%;
+
+    .footer-hotro1 {
+        font-size: 25px;
+    }
+
+    .footer-hotro2 {
+        font-size: 20px;
+    }
+
+    .footer-hotro2:hover{
+        cursor: pointer;;
+    }
+}
+
+
+.footer-mangxahoi {
+    border-top: 1px solid rgb(206, 206, 206);
+    width: 30%;
+
+    .mangxahoi1 {
+        font-size: 25px;
+    }
+
+    .mangxahoi2 {
+        font-size: 20px;
+    }
+}
+
+
+
+@keyframes hueRotate {
+    0% {
+        filter: hue-rotate(0deg);
+        /* Màu bắt đầu từ màu gốc */
+    }
+
+    100% {
+        filter: hue-rotate(270deg);
+        /* Chuyển đến một màu tối hơn */
+    }
+}
