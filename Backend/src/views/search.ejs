@@ -1,0 +1,129 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="/" class="active">Home</a>
+        <a href="/user-order">User</a>
+    </div>
+
+    <div class="w3-container">
+        <h2>Kết quả tìm được</h2>
+        <form action="/Tim" method="post">
+            <label class="search-container">
+                <input class="search" type="text" id="tenSP" name="tenSP" placeholder="Nhập tên sản phẩm...">
+                <button type="submit" class="button">Tìm kiếm</button>
+            </label>
+
+            <label class="search-container">
+                <input class="search" type="text" id="tenloaiSP" name="tenloaiSP" placeholder="Nhập tên loại...">
+                <button class="button" type="submit">Tìm kiếm</button>
+            </label>
+
+            <label class="search-container">
+                <input class="search" type="text" id="tenNSX" name="tenNSX" placeholder="Nhập tên hãng...">
+                <button class="button" type="submit">Tìm kiếm</button>
+            </label>
+            <label class="search-container">
+                <select id="giatien" name="giatien">
+                    <option value="">Chọn giá</option>
+                    <option value="5000000">Dưới 5,000,000 VND</option>
+                    <option value="10000000">5,000,000 - 10,000,000 VND</option>
+                    <option value="15000000">10,000,000 - 12,000,000 VND</option>
+                    <option value="20000000">Trên 20,000,000 VND</option>
+                    <!-- Thêm các option khác tùy theo nhu cầu -->
+                </select>
+                <button class="button" type="submit">Tìm kiếm</button>
+            </label>
+
+        </form>
+        <table class="w3-table-all w3-hoverable">
+            <thead>
+                <tr class="w3-light-grey">
+                    <th>Mã sản phẩm</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Hệ điều hành</th>
+                    <th>Tên hãng</th>
+                    <th>Số lượng</th>
+                    <th>Giá tiền</th>
+                    <th>Màn hình</th>
+                    <th>Dung lượng</th>
+                    <th>RAM</th>
+                    <th>Pin, sạc</th>
+                    <th>Ghi chú</th>
+                    <th>Minh họa</th>
+                    <th>Chức năng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(let i=0; i < dataProduct.length; i++) { %>
+                    <tr>
+                        <td>
+                            <%= dataProduct[i].id %>
+                        </td>
+                        <td>
+                            <%= dataProduct[i].tenSP %>
+                        </td>
+                        <td>
+                            <%= dataProduct[i].tenloaiSP %>
+                        </td>
+                        <td>
+                            <%= dataProduct[i].tenNSX %>
+                        </td>
+                        <td>
+                            <%= dataProduct[i].soluong %>
+                        </td>
+
+                        <td>
+                            <%= dataProduct[i].giatien %>
+                        </td>
+
+                        <td>
+                            <%= dataProduct[i].manhinh %>
+                        </td>
+
+                        <td>
+                            <%= dataProduct[i].dungluong %>
+                        </td>
+
+                        <td>
+                            <%= dataProduct[i].ram %>
+                        </td>
+
+                        <td>
+                            <%= dataProduct[i].pin %>
+                        </td>
+
+                        <td>
+                            <%= dataProduct[i].ghichu %>
+                        </td>
+
+                        <td>
+                            <img src="/img/<%= dataProduct[i].mota %>" alt="" width="100px" height="100px" />
+                        </td>
+
+                        <td style="display: flex">
+                            <form action="/editproduct/<%=dataProduct[i].id%>" method="get">
+                                <button type="submit">Edit</button>
+                            </form>
+
+                            <form action="/delete-product" method="post">
+                                <input type="text" hidden value="<%=dataProduct[i].id%>" name="productId" /><button
+                                    type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% } %>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

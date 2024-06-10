@@ -1,35 +1,76 @@
 const express = require("express");
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+var appRoot = require('app-root-path');
 
 const {
-    //product
     getAllProduct,
     createProduct,
-    updateProduct,
     deleteProduct,
+    updateProduct,
+    deleteNSX,
     getIdProduct,
     //user
-    getAllUser,
+    //getAllUser,
+    getInfoUser,
+    CapnhatUser,
+    updateUser,
 
     Signup,
+
     confirmOrder,
-    handleLogin
+
+    handleLogin,
+
+    updateIMG,
+
+    getIdBill,
 } = require("../controllers/apiController");
 
-router.get("/user", getAllUser); // get list of users
+//Ensure the directory exists
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '..', 'public', 'img'));
+    },
+    filename: function (req, file, cb) {
+        cb(
+            null,
+            file.fieldname + '-' + Date.now() + path.extname(file.originalname)
+        );
+    },
+});
 
-//Product
+const imageFilter = function (req, file, cb) {
+    // Accept images only
+    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF|webp)$/)) {
+        req.fileValidationError = "Only image files are allowed!";
+        return cb(new Error("Only image files are allowed!"), false);
+    }
+    cb(null, true);
+};
+
+const upload = multer({ storage: storage, fileFilter: imageFilter });
+
 router.get("/product", getAllProduct);
 router.post("/create-product", createProduct);
 router.put("/update-product", updateProduct);
 router.delete("/delete-product/:id", deleteProduct);
-
-router.post('/confirmOrder', confirmOrder);
-
+router.delete("/delete-tenNSX/:tenNSX", deleteNSX);
 router.get("/product/:id", getIdProduct);
 
-router.post('/confirmSignup', Signup);
+//User
+//router.get("/user", getAllUser);
+router.get("/user/info/:username", getInfoUser);
+router.put("/user/info/update/:username", updateUser);
 
+router.post('/confirmOrder', confirmOrder);
+router.post('/confirmSignup', Signup);
 router.post('/login', handleLogin);
+router.put('/updateimg', upload.single('avatar'), updateIMG);
+
+router.get("/bill/:username", getIdBill);
+
 
 module.exports = router;

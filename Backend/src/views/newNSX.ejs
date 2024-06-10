@@ -1,0 +1,62 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="/">Home</a>
+        <a class="active" href="#news">Update Producer</a>
+    </div>
+
+    <div class="create-user-container">
+        <form action="/add-new-NSX" method="post">
+            <fieldset>
+                <legend><b>Thêm Nhà Sản Xuất</b></legend>
+                <div>
+                    <label for="">Tên NSX</label>
+                    <input type="text" name="tenNSX">
+                </div>
+                <div>
+                    <button type="submit">Save</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <table class="container-LoaiSP">
+        <tbody>
+            <tr class="hang-loaiSP">
+                <td class="tenhang">
+                    TÊN NSX
+                </td>
+                <td class="chucnang">
+                    CHỨC NĂNG
+                </td>
+            </tr>
+            <% AllNSX.forEach(function(AllNSX) { %>
+
+                <tr class="Nhasanxuat">
+
+                    <td class="ten-NSX">
+                        <%= AllNSX.tenNSX %>
+                    </td>
+                    <td>
+                        <form action="/delete-tenNSX" method="post">
+                            <input type="text" hidden value="<%=AllNSX.tenNSX%>" name="NSXId">
+                            <button class="delete-NSX">Xóa</button>
+                        </form>
+                    </td>
+
+                </tr>
+                <% }); %>
+        </tbody>
+    </table>
+</body>
+
+</html>
