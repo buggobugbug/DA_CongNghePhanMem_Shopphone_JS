@@ -8,6 +8,10 @@ const {
 } = require('../controllers/homeController');
 const { use } = require("../routes/api");
 
+
+
+//-----------------------SẢN PHẨM, TRANG CHỦ-------------------------
+
 const getAllProduct = async (req, res) => {
     try {
         const [results, fields] = await connection.execute(
@@ -131,18 +135,9 @@ const updateProduct = async (req, res) => {
     });
 };
 
-const deleteNSX = async (req, res) => {
-    const NSXId = req.params.tenNSX;
-    if (!NSXId) {
-        return res.status(200).json({
-            message: "missing ",
-        });
-    }
-    await connection.execute("delete from NHASANXUAT where tenNSX = ?", [NSXId]);
-    return res.status(200).json({
-        message: "ok",
-    });
-};
+
+
+//-----------------------------NHÀ SẢN XUẤT, LOẠI SẢN PHẨM----------------------------
 
 const getTenLoaiSP = async (req, res) => {
     let tenloaiSP = req.params.tenloaiSP;
@@ -170,7 +165,23 @@ const getTenLoaiSP = async (req, res) => {
             error: error.message,
         });
     }
-}
+};
+
+const deleteNSX = async (req, res) => {
+    const NSXId = req.params.tenNSX;
+    if (!NSXId) {
+        return res.status(200).json({
+            message: "missing ",
+        });
+    }
+    await connection.execute("delete from NHASANXUAT where tenNSX = ?", [NSXId]);
+    return res.status(200).json({
+        message: "ok",
+    });
+};
+
+//----------------------------KHÁCH HÀNG----------------------------------
+
 
 // const getAllUser = async (req, res) => {
 //     const results = await getUser();
@@ -228,135 +239,38 @@ const getThongtinUser = async (taikhoan) => {
 
 };
 
-//-----------------------------ĐẶT HÀNG---------------------------------//
-// Hàm kiểm tra sự tồn tại của mã khách hàng trong cơ sở dữ liệu
-const isMaKHExists = async (maKH) => {
-    const [rows] = await connection.execute('SELECT COUNT(*) as count FROM KHACHHANG WHERE maKH = ?', [maKH]);
-    return rows[0].count > 0;
-};
 
-const isMaHDExists = async (maHD) => {
-    const [rows] = await connection.execute('SELECT COUNT(*) as count FROM HOADON WHERE maHD = ?', [maHD]);
-    return rows[0].count > 0;
-};
 
-// Hàm tạo số ngẫu nhiên không trùng lặp
-const random = async () => {
-    let maKH;
+
+//---------------------ĐĂNG NHẬP, ĐĂNG KÝ-------------------------------
+
+const handleLogin = async (req, res) => {
+    const { username, password } = req.body;
+
+    console.log(username + password);
     try {
-        do {
-            maKH = Math.floor(Math.random() * 1000) + 1;
-        } while (await isMaKHExists(maKH));
-        console.log(maKH);
-        return maKH;
-    } catch (error) {
-        console.error('Error generating random MaKH:', error);
-        throw error;
-    }
-};
 
-const randomhoadon = async () => {
-    let maHD;
-    try {
-        do {
-            maHD = Math.floor(Math.random() * 1000) + 1;
-        } while (await isMaHDExists(maHD));
-        console.log(maHD);
-        return maHD;
-    } catch (error) {
-        console.error('Error generating random MaHD:', error);
-        throw error;
-    }
-};
-
-const hoadon = async (maKH, hoTenKhachHang, sodienthoai, diachi, id, quantity, totalPrice) => {
-    const currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
-    console.log(currentTime);
-    try {
-        const maHD = await randomhoadon();
-        console.log("maHD=", maHD);
-        await connection.execute(`
-                INSERT INTO HOADON (maHD, maKH, tenKH, diachiKH, sdtKH, thoigiandat)
-                VALUES (?, ?, ?, ?, ?, ?)
-                `, [maHD, maKH, hoTenKhachHang, diachi, sodienthoai, currentTime]);
-        await chitiethoadon(maHD, id, quantity, totalPrice);
-
-        console.log('Hóa đơn');
-    } catch (error) {
-        console.error('Error inserting into HOADON:', error);
-        throw error;
-    }
-};
-
-const chitiethoadon = async (maHD, id, quantity, totalPrice) => {
-    try {
-        await connection.execute(`
-                INSERT INTO CHITIETHOADON (maHD, id, soluongdat, tongtien)
-                VALUES (?, ?, ?, ?)
-                `, [maHD, id, quantity, totalPrice]);
-        subtractProductQuantity(id, quantity);
-        console.log('số lượng', quantity);
-        console.log('tổng tiền', totalPrice);
-    } catch (error) {
-        console.error('Error inserting into CHITIETHOADON:', error);
-        throw error;
-    }
-};
-
-///-------------------------------------------------------------------------------------------------------
-
-async function subtractProductQuantity(id, quantity) {
-    // Tạo kết nối đến cơ sở dữ liệu
-
-    try {
-        // Lấy số lượng sản phẩm trước khi trừ
-        const [rows] = await connection.execute('SELECT soluong FROM SANPHAM WHERE id = ?', [id]);
-
-        if (rows.length > 0) {
-            const currentQuantity = rows[0].soluong;
-
-            // Kiểm tra xem có đủ số lượng sản phẩm để trừ không
-            if (currentQuantity >= quantity) {
-                // Thực hiện trừ số lượng sản phẩm
-                await connection.execute('UPDATE SANPHAM SET soluong = ? WHERE id = ?', [currentQuantity - quantity, id]);
-                console.log('Cập nhật thành công.');
-            } else {
-                console.log('Không đủ số lượng sản phẩm');
-            }
-        } else {
-            console.log('Không tìm thấy.');
+        if (!username || !password) {
+            return res.status(400).send({ message: 'Please provide both username and password' });
         }
-    } catch (error) {
-        console.error('Lỗi: ' + error.message);
-    }
-}
 
-//------------------------------------------------------------------------------------------------------//
+        const respone = await connection.execute(`
+            SELECT * FROM TAIKHOAN WHERE taikhoan = ? AND matkhau = ?
+            `, [username, password]);
 
-const confirmOrder = async (req, res) => {
-    try {
-        const maKH = await random();
-        const { id, hoTenKhachHang, sodienthoai, diachi, quantity, totalPrice, getusername } = req.body;
-        console.log("user", getusername)
 
-        // Thực hiện truy vấn INSERT
-
-        await connection.execute(`
-        INSERT INTO KHACHHANG (maKH, hotenKH, sdt, diachi, taikhoan)
-        VALUES (?, ?, ?, ?, ?)
-        `, [maKH, hoTenKhachHang, sodienthoai, diachi, getusername]);
-
-        console.log('Khách hàng');
-
-        await hoadon(maKH, hoTenKhachHang, sodienthoai, diachi, id, quantity, totalPrice);
-
-        res.status(200).json({ success: true });
+        console.log(respone);
+        if (respone.length > 0) {
+            //res.status({ message: 'Login successful', user: respone[0] });
+            res.status(200).send({ message: 'Login successful', user: respone[0] });
+        } else {
+            res.status(401).send({ message: 'Invalid username or password' });
+        }
     } catch (error) {
         console.error('Error inserting into MySQL:', error);
         res.status(500).json({ success: false, error: error.message });
     }
-}
-
+};
 
 const Signup = async (req, res) => {
     try {
@@ -380,35 +294,10 @@ const Signup = async (req, res) => {
 
 };
 
-const handleLogin = async (req, res) => {
-    const { username, password } = req.body;
-
-    console.log(username + password);
-    try {
 
 
 
-        if (!username || !password) {
-            return res.status(400).send({ message: 'Please provide both username and password' });
-        }
-
-        const respone = await connection.execute(`
-            SELECT * FROM TAIKHOAN WHERE taikhoan = ? AND matkhau = ?
-            `, [username, password]);
-
-
-        console.log(respone);
-        if (respone.length > 0) {
-            //res.status({ message: 'Login successful', user: respone[0] });
-            res.status(200).send({ message: 'Login successful', user: respone[0] });
-        } else {
-            res.status(401).send({ message: 'Invalid username or password' });
-        }
-    } catch (error) {
-        console.error('Error inserting into MySQL:', error);
-        res.status(500).json({ success: false, error: error.message });
-    }
-};
+//---------------------KHÁCH HÀNG------------------------
 
 const updateUser = async (req, res) => {
     try {
@@ -491,6 +380,10 @@ const updateIMG = async (req, res) => {
     }
 }
 
+
+
+//--------------------HÓA ĐƠN---------------------------
+
 const getIdBill = async (req, res) => {
     try {
         const username = req.params.username;
@@ -522,10 +415,136 @@ const getIdBill = async (req, res) => {
             DT: null,
         });
     }
-}
+};
+
+// Hàm kiểm tra sự tồn tại của mã khách hàng trong cơ sở dữ liệu
+const isMaKHExists = async (maKH) => {
+    const [rows] = await connection.execute('SELECT COUNT(*) as count FROM KHACHHANG WHERE maKH = ?', [maKH]);
+    return rows[0].count > 0;
+};
+
+const isMaHDExists = async (maHD) => {
+    const [rows] = await connection.execute('SELECT COUNT(*) as count FROM HOADON WHERE maHD = ?', [maHD]);
+    return rows[0].count > 0;
+};
+
+// Hàm tạo số ngẫu nhiên không trùng lặp
+const random = async () => {
+    let maKH;
+    try {
+        do {
+            maKH = Math.floor(Math.random() * 1000) + 1;
+        } while (await isMaKHExists(maKH));
+        console.log(maKH);
+        return maKH;
+    } catch (error) {
+        console.error('Error generating random MaKH:', error);
+        throw error;
+    }
+};
+
+const randomhoadon = async () => {
+    let maHD;
+    try {
+        do {
+            maHD = Math.floor(Math.random() * 1000) + 1;
+        } while (await isMaHDExists(maHD));
+        console.log(maHD);
+        return maHD;
+    } catch (error) {
+        console.error('Error generating random MaHD:', error);
+        throw error;
+    }
+};
+
+const hoadon = async (maKH, hoTenKhachHang, sodienthoai, diachi, id, quantity, totalPrice) => {
+    const currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    console.log(currentTime);
+    try {
+        const maHD = await randomhoadon();
+        console.log("maHD=", maHD);
+        await connection.execute(`
+                INSERT INTO HOADON (maHD, maKH, tenKH, diachiKH, sdtKH, thoigiandat)
+                VALUES (?, ?, ?, ?, ?, ?)
+                `, [maHD, maKH, hoTenKhachHang, diachi, sodienthoai, currentTime]);
+        await chitiethoadon(maHD, id, quantity, totalPrice);
+
+        console.log('Hóa đơn');
+    } catch (error) {
+        console.error('Error inserting into HOADON:', error);
+        throw error;
+    }
+};
+
+const chitiethoadon = async (maHD, id, quantity, totalPrice) => {
+    try {
+        await connection.execute(`
+                INSERT INTO CHITIETHOADON (maHD, id, soluongdat, tongtien)
+                VALUES (?, ?, ?, ?)
+                `, [maHD, id, quantity, totalPrice]);
+        subtractProductQuantity(id, quantity);
+        console.log('số lượng', quantity);
+        console.log('tổng tiền', totalPrice);
+    } catch (error) {
+        console.error('Error inserting into CHITIETHOADON:', error);
+        throw error;
+    }
+};
+
+async function subtractProductQuantity(id, quantity) {
+    // Tạo kết nối đến cơ sở dữ liệu
+
+    try {
+        // Lấy số lượng sản phẩm trước khi trừ
+        const [rows] = await connection.execute('SELECT soluong FROM SANPHAM WHERE id = ?', [id]);
+
+        if (rows.length > 0) {
+            const currentQuantity = rows[0].soluong;
+
+            // Kiểm tra xem có đủ số lượng sản phẩm để trừ không
+            if (currentQuantity >= quantity) {
+                // Thực hiện trừ số lượng sản phẩm
+                await connection.execute('UPDATE SANPHAM SET soluong = ? WHERE id = ?', [currentQuantity - quantity, id]);
+                console.log('Cập nhật thành công.');
+            } else {
+                console.log('Không đủ số lượng sản phẩm');
+            }
+        } else {
+            console.log('Không tìm thấy.');
+        }
+    } catch (error) {
+        console.error('Lỗi: ' + error.message);
+    }
+};
+
+const confirmOrder = async (req, res) => {
+    try {
+        const maKH = await random();
+        const { id, hoTenKhachHang, sodienthoai, diachi, quantity, totalPrice, getusername } = req.body;
+        console.log("user", getusername)
+
+        // Thực hiện truy vấn INSERT
+
+        await connection.execute(`
+        INSERT INTO KHACHHANG (maKH, hotenKH, sdt, diachi, taikhoan)
+        VALUES (?, ?, ?, ?, ?)
+        `, [maKH, hoTenKhachHang, sodienthoai, diachi, getusername]);
+
+        console.log('Khách hàng');
+
+        await hoadon(maKH, hoTenKhachHang, sodienthoai, diachi, id, quantity, totalPrice);
+
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('Error inserting into MySQL:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
 
 
 module.exports = {
+
+    //----------------SẢN PHẨM, TRANG CHỦ---------------------
     getAllProduct,
     createProduct,
     deleteProduct,
@@ -533,14 +552,20 @@ module.exports = {
     deleteNSX,
     getIdProduct,
     getTenLoaiSP,
-    //User
-    //getAllUser,
+
+    //-----------------KHÁCH HÀNG---------------
     getInfoUser,
     CapnhatUser,
-    Signup,
-    confirmOrder,
-    handleLogin,
-    updateUser,
     updateIMG,
-    getIdBill
+    updateUser,
+    //User
+    //getAllUser,
+
+    //-----------------HÓA ĐƠN-----------------
+    getIdBill,
+    confirmOrder,
+
+    //------------------ĐĂNG NHẬP, ĐĂNG KÝ------------
+    handleLogin,
+    Signup,
 };

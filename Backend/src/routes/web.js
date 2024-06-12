@@ -6,20 +6,28 @@ const fs = require('fs');
 var appRoot = require('app-root-path');
 
 const {
+    //-------------SẢN PHẨM, TRANG CHỦ-------------
     getHomePage,
-    //getDetailPage,
     createNewProduct,
     deleteProduct,
     getEditPage,
     updateProduct,
-    getUserPage,
+    searchProduct,
     addNewNSX,
     getAddNew,
     deleteNSX,
-    searchProduct,
-    deleteUser,
+    //--------------KHÁCH HÀNG-------------------
+    getUserPage,
+    //deleteUser,
+    //--------------HÓA ĐƠN----------------------
     getDetailBill,
     //deleteDetailBill,
+    deleteBills,
+    //getDetailPage,
+
+
+
+
 } = require('../controllers/homeController');
 
 const storage = multer.diskStorage({
@@ -68,10 +76,10 @@ router.post("/Tim", searchProduct);
 
 router.post("/delete-tenNSX", deleteNSX);
 
-router.post("/delete-user", deleteUser);
+//router.post("/delete-user", deleteUser);
 
 router.get("/bill-order", getDetailBill);
-
+router.post("/delete-bill", deleteBills)
 
 
 module.exports = router;

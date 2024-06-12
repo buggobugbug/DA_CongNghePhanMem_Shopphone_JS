@@ -2,6 +2,10 @@ const express = require("express");
 const connection = require("../config/dataBase");  // Đường dẫn có thể phải được điều chỉnh dựa trên cấu trúc của dự án của bạn
 const multer = require("multer");
 
+const upload = multer().single("profile_pic");
+
+
+//---------------------------SẢN PHẨM, TRANG CHỦ---------------------------
 const getAllProduct = async (req, res) => {
     const [results, fields] = await connection.execute("SELECT * FROM SANPHAM");
     return results;
@@ -13,60 +17,6 @@ const getHomePage = async (req, res) => {
     const getAllNSXX = await getAllNSX();
     return res.render("home.ejs", { dataProduct: results, AllNSX: getAllNSXX });
 };
-
-const getUserPage = async (req, res) => {
-    const [results, fields] = await connection.execute("SELECT * FROM KHACHHANG ");
-
-    return res.render("user.ejs", { dataUsers: results });
-};
-
-const getUser = async (req, res) => {
-    const [results, fields] = await connection.execute("SELECT * FROM KHACHHANG ");
-    console.log(results);
-    return {
-        EM: "xem thông tin thành công",
-        EC: 1,
-        DT: results,
-    };
-};
-
-// JOIN
-// KHACHHANG ON HOADON.maKH = KHACHHANG.maKH
-
-const getDetailBill = async (req, res) => {
-    try {
-        const [results, fields] = await connection.execute(`
-            SELECT
-                HOADON.maHD,
-                KHACHHANG.maKH,
-                SANPHAM.tenSP,
-                KHACHHANG.hotenKH,
-                KHACHHANG.sdt,  
-                KHACHHANG.diachi,
-                HOADON.tenKH,
-                HOADON.diachiKH,
-                HOADON.sdtKH,
-                CHITIETHOADON.soluongdat,
-                CHITIETHOADON.tongtien,
-                HOADON.thoigiandat
-            FROM
-                HOADON
-            JOIN
-                KHACHHANG ON HOADON.maKH = KHACHHANG.maKH
-            JOIN
-                CHITIETHOADON ON HOADON.maHD = CHITIETHOADON.maHD
-            JOIN
-                SANPHAM ON CHITIETHOADON.id = SANPHAM.id
-        `);
-
-        return res.render("detailbill.ejs", { dataBills: results });
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        return res.status(500).send("Internal Server Error");
-    }
-};
-
-
 
 const createNewProduct = async (req, res) => {
     //let id = req.body.id;
@@ -105,25 +55,25 @@ const deleteProduct = async (req, res) => {
     return res.redirect("/");
 };
 
-const deleteUser = async (req, res) => {
-    const maKH = req.body.idUser;
+// const deleteUser = async (req, res) => {
+//     const maKH = req.body.idUser;
 
-    try {
-        // Xóa tất cả chi tiết hóa đơn của các hóa đơn liên quan
-        await connection.execute("DELETE FROM CHITIETHOADON WHERE maHD IN (SELECT maHD FROM HOADON WHERE maKH = ?)", [maKH]);
+//     try {
+//         // Xóa tất cả chi tiết hóa đơn của các hóa đơn liên quan
+//         await connection.execute("DELETE FROM CHITIETHOADON WHERE maHD IN (SELECT maHD FROM HOADON WHERE maKH = ?)", [maKH]);
 
-        // Sau đó xóa các hóa đơn của khách hàng
-        await connection.execute("DELETE FROM HOADON WHERE maKH = ?", [maKH]);
+//         // Sau đó xóa các hóa đơn của khách hàng
+//         await connection.execute("DELETE FROM HOADON WHERE maKH = ?", [maKH]);
 
-        // Cuối cùng, xóa khách hàng
-        await connection.execute("DELETE FROM KHACHHANG WHERE maKH = ?", [maKH]);
+//         // Cuối cùng, xóa khách hàng
+//         await connection.execute("DELETE FROM KHACHHANG WHERE maKH = ?", [maKH]);
 
-        res.redirect("/user-order");
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Lỗi Nội Server");
-    }
-};
+//         res.redirect("/user-order");
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).send("Lỗi Nội Server");
+//     }
+// };
 
 const getEditPage = async (req, res) => {
     let id = req.params.id;
@@ -165,38 +115,6 @@ const updateProduct = async (req, res, err) => {
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
-};
-
-const upload = multer().single("profile_pic");
-
-const getAllNSX = async () => {
-
-    let [results, fields] = await (await connection).execute('select * from NHASANXUAT ')
-    return results;
-}
-const addNewNSX = async (req, res) => {
-    let NSX = req.body.tenNSX;
-
-    const getAllNSXX = await getAllNSX()
-
-    res.render("newNSX.ejs", { AllNSX: getAllNSXX });
-};
-
-const getAddNew = async (req, res) => {
-    let tenNSX = req.body.tenNSX;
-    const [results, fields] = await (await connection).execute(`INSERT INTO NHASANXUAT (tenNSX) VALUES (?);`, [tenNSX]);
-    const getAllNSXX = await getAllNSX()
-    //res.render('addnew.ejs', { AllNSX: getAllNSXX });
-    //const getAllSP = await getAllProduct()
-    //res.render("home.ejs", { dataProduct: getAllSP, AllNSX: getAllNSXX });
-    res.render("newNSX.ejs", { AllNSX: getAllNSXX });
-};
-
-const deleteNSX = async (req, res) => {
-    const NSXId = req.body.NSXId;
-    await connection.execute("delete from NHASANXUAT where tenNSX = ?", [NSXId]);
-    const getAllNSXX = await getAllNSX();
-    return res.render("newNSX.ejs", { AllNSX: getAllNSXX });
 };
 
 const searchProduct = async (req, res) => {
@@ -248,10 +166,6 @@ const searchProduct = async (req, res) => {
             queryParams.push(tenloaiSPFilter);
         }
 
-        // if (giaFilter) {
-        //     queryParams.push(giaFilter);
-        // }
-
         const [results, fields] = await connection.execute(
             query,
             queryParams
@@ -267,20 +181,133 @@ const searchProduct = async (req, res) => {
 
 
 
+//--------------------------------NHÀ SẢN XUẤT-----------------------------------
+
+const getAllNSX = async () => {
+
+    let [results, fields] = await (await connection).execute('select * from NHASANXUAT ')
+    return results;
+}
+
+const addNewNSX = async (req, res) => {
+    let NSX = req.body.tenNSX;
+
+    const getAllNSXX = await getAllNSX()
+
+    res.render("newNSX.ejs", { AllNSX: getAllNSXX });
+};
+
+const getAddNew = async (req, res) => {
+    let tenNSX = req.body.tenNSX;
+    const [results, fields] = await (await connection).execute(`INSERT INTO NHASANXUAT (tenNSX) VALUES (?);`, [tenNSX]);
+    const getAllNSXX = await getAllNSX()
+    //res.render('addnew.ejs', { AllNSX: getAllNSXX });
+    //const getAllSP = await getAllProduct()
+    //res.render("home.ejs", { dataProduct: getAllSP, AllNSX: getAllNSXX });
+    res.render("newNSX.ejs", { AllNSX: getAllNSXX });
+};
+
+const deleteNSX = async (req, res) => {
+    const NSXId = req.body.NSXId;
+    await connection.execute("delete from NHASANXUAT where tenNSX = ?", [NSXId]);
+    const getAllNSXX = await getAllNSX();
+    return res.render("newNSX.ejs", { AllNSX: getAllNSXX });
+};
+
+
+
+//--------------------------------KHÁCH HÀNG--------------------------------------
+const getUserPage = async (req, res) => {
+    const [results, fields] = await connection.execute("SELECT * FROM KHACHHANG ");
+
+    return res.render("user.ejs", { dataUsers: results });
+};
+
+const getUser = async (req, res) => {
+    const [results, fields] = await connection.execute("SELECT * FROM KHACHHANG ");
+    console.log(results);
+    return {
+        EM: "xem thông tin thành công",
+        EC: 1,
+        DT: results,
+    };
+};
+
+
+
+
+//--------------------------------HÓA ĐƠN-----------------------------------------
+const getDetailBill = async (req, res) => {
+    try {
+        const [results, fields] = await connection.execute(`
+            SELECT
+                HOADON.maHD,
+                KHACHHANG.maKH,
+                SANPHAM.tenSP,
+                KHACHHANG.hotenKH,
+                KHACHHANG.sdt,  
+                KHACHHANG.diachi,
+                HOADON.tenKH,
+                HOADON.diachiKH,
+                HOADON.sdtKH,
+                CHITIETHOADON.soluongdat,
+                CHITIETHOADON.tongtien,
+                HOADON.thoigiandat
+            FROM
+                HOADON
+            JOIN
+                KHACHHANG ON HOADON.maKH = KHACHHANG.maKH
+            JOIN
+                CHITIETHOADON ON HOADON.maHD = CHITIETHOADON.maHD
+            JOIN
+                SANPHAM ON CHITIETHOADON.id = SANPHAM.id
+        `);
+
+        return res.render("detailbill.ejs", { dataBills: results });
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        return res.status(500).send("Internal Server Error");
+    }
+};
+
+const deleteBills = async (req, res) => {
+    const maHD = req.body.idBills;
+
+    try {
+        // Xóa tất cả chi tiết hóa đơn của các hóa đơn liên quan
+        await connection.execute("DELETE FROM CHITIETHOADON WHERE maHD = ?", [maHD]);
+
+        // Sau đó xóa hóa đơn
+        await connection.execute("DELETE FROM HOADON WHERE maHD = ?", [maHD]);
+
+        res.redirect("/bill-order");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Lỗi Nội Server");
+    }
+}
+
+
 module.exports = {
+    //----------Sản phẩm, Trang chủ----------
     getHomePage,
-    //getDetailPage,
     createNewProduct,
     deleteProduct,
     getEditPage,
     updateProduct,
-    getUserPage,
-    getUser,
-    addNewNSX,
+    searchProduct,
     getAddNew,
     deleteNSX,
-    searchProduct,
-    deleteUser,
+    addNewNSX,
+
+    //-----------Khách hàng---------------
+    getUserPage,
+    getUser,
+    //deleteUser,
+
+    //-------------Hóa đơn----------------
     getDetailBill,
-    //deleteDetailBill
+    deleteBills,
+    //getDetailPage,
+    //deleteDetailBill,
 };
