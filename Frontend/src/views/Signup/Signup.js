@@ -61,29 +61,29 @@ const Signup = () => {
             <div className="container_signup">
                 <input type="checkbox" id="check" />
                 <div className="signup form">
-                    <h1>Signup</h1>
+                    <header>Đăng ký</header>
                     <form>
                         <input
                             type="text"
-                            placeholder="Enter your email"
+                            placeholder="Nhập tài khoản"
                             name='username'
                         />
                         <input
                             type="password"
-                            placeholder="Enter your password"
+                            placeholder="Nhập mật khẩu"
                             name='password'
                         />
                         <input
                             type="password"
-                            placeholder="Re-enter your password"
+                            placeholder="Nhập lại mật khẩu"
                             name="repassword"
                         />
-                        <a onClick={alertFunction}>Forgot password?</a>
-                        <button onClick={(event) => handleConfirm(event)} className="button" type="button">Sign Up</button>
+                        <a onClick={alertFunction}>Quên mật khẩu?</a>
+                        <button onClick={(event) => handleConfirm(event)} className="button" type="button">Đăng ký</button>
                     </form>
                     <div className="login">
                         <NavLink className="login" to="/login" activeClassName="active">
-                            <label>Already have an account? </label>
+                            <label>Đã có tài khoản? </label>
                         </NavLink>
                     </div>
                 </div>

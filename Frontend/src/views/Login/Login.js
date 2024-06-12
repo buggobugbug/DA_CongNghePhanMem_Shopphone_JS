@@ -38,16 +38,16 @@ const Login = () => {
             <div className="container_login">
                 <input type="checkbox" id="check" />
                 <div className="login form">
-                    <header>Login</header>
+                    <header>Đăng nhập</header>
                     <form onSubmit={handleLogin}>
-                        <input type="text" placeholder="Enter your email" value={username} onChange={(e) => setEmail(e.target.value)} />
-                        <input type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                        <a onClick={alertFunction_login}> Forgot password? </a>
-                        <button className="button" type="submit">Login</button>
+                        <input type="text" placeholder="Nhập tài khoản" value={username} onChange={(e) => setEmail(e.target.value)} />
+                        <input type="password" placeholder="Nhập mật khẩu" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <a onClick={alertFunction_login}> Quên mật khẩu? </a>
+                        <button className="button" type="submit">Đăng nhập</button>
                     </form>
                     <div className="signup">
                         <NavLink className="signup" to="/signup" activeClassName="active">
-                            <span>Don't have an account?</span>
+                            <span>Bạn chưa có tài khoản?</span>
                         </NavLink>
                     </div>
                 </div>
